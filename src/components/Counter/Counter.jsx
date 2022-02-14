@@ -2,43 +2,47 @@ import { useReducer, useEffect, useState } from 'react'
 
 const pinkRGB = `rgb(236, 72, 153)`
 
-const initialState = 0;
 
-function counterReducer(state, action) {
-  switch (action.type) {
-    case 'increment': 
-      return state + 1;
-    case 'decrement': 
-      return state - 1;
-    case 'reset':
-      return 0
-    default:
-      throw new Error(`type not recognized ${action.type}`);
-
-    }
-  }
+const initialState = { count: 0, color: pinkRGB };
 
 
 export default function Counter() {
-  const [count, dispatch] = useReducer(counterReducer, initialState)
-  // const [count, setCount] = useState(0)
   const [currentColor, setCurrentColor] = useState(pinkRGB)
 
-   
-
-  useEffect(() => {
+  const getColor = (count) => {
     if (count === 0) {
       setCurrentColor(pinkRGB)
     }
-
+    
     if (count > 0) {
       setCurrentColor(`rgb(52, 211, 153)`)
     }
-
+    
     if (count < 0) {
-      setCurrentColor(`rgb(239, 68, 68)`)
+      setCurrentColor(`rgb(239, 68, 68)`
+      )  }
+      
     }
-  }, [count])
+    
+    
+    function counterReducer(state, { type }) {
+      switch (type) {
+        case 'increment': 
+        return { count: state.count + 1, color: getColor(state.count + 1) };
+        case 'decrement': 
+        return { count: state.count - 1, color: getColor(state.count - 1) };
+        case 'reset':
+          return { count: 0, color: getColor(0) }
+          default:
+            throw new Error(`type not recognized ${type}`);
+            
+          }
+        }
+        
+        const [count, dispatch] = useReducer(counterReducer, initialState)
+        // const [count, setCount] = useState(0)
+
+   
 
   const increment = () => {
     dispatch({
@@ -62,7 +66,7 @@ export default function Counter() {
   return (
     <main className="bg-black bg-opacity-90 min-h-screen flex flex-col items-center justify-center text-4xl text-pink-500">
       <h1 className="mb-5" style={{ color: currentColor }}>
-        {count}
+        {count.count}
       </h1>
       <div className="flex w-1/2 justify-around">
         <button
